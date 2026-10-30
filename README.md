@@ -20,14 +20,20 @@ A collection of practical projects built with web technologies, Flutter, Firebas
 | [LearnHub](./learnhub) | HTML, CSS, JavaScript | Beginner lessons, quizzes and local progress tracking. |
 | [DeniAI Studio](./deniai-studio) | Python, Flask, Gemini | Server-side Gemini prompt assistant; API key required. |
 | [MediBook](./medibook) | Python, Flask, SQLite | Local appointment-request demo; not a real healthcare service. |
-| [DevTrack](./devtrack) | React, Node.js, Express, PostgreSQL, Prisma | Full-stack project management workspace with JWT auth, projects, Kanban tasks and comments. |
+| [DevTrack](./devtrack) | React, Node.js, Express, PostgreSQL, Prisma | Project management workspace with JWT auth, projects, Kanban tasks and comments. |
+| [StockPilot](./stockpilot) | React, Node.js, Express, PostgreSQL, Prisma | Inventory catalogue, stock adjustment and low-stock business rules. |
+| [HelpDesk Pro](./helpdesk-pro) | React, Node.js, Express, Socket.IO, PostgreSQL | Support ticket API with realtime ticket and message events. |
+| [SkillSphere](./skillsphere) | React, Node.js, Express, PostgreSQL, Prisma, JWT | User registration/login, course catalogue and enrollment API. |
+| [UptimeX](./uptimex) | React, Node.js, Express, PostgreSQL, Prisma | HTTP endpoint checks, latency history and manual health checks. |
 
 ## Getting started
 
-Open each project folder's README for its setup instructions. Web demos can be opened in a browser or served locally. Flutter projects require the Flutter SDK. Python projects require Python and their listed packages.
+Open each project folder's README for its setup instructions. Web projects require Node.js and their listed packages. Flutter projects require the Flutter SDK. Python projects require Python and their listed packages.
 
 ## Important status and security notes
 
 These projects are learning-oriented MVPs, not audited production services. External integrations require your own API keys and Firebase configuration. Never commit secrets. Sample job listings and sample products are not live commercial data. ShopVerse does not process payments; JobFinder does not submit job applications; MediBook does not contact clinics and must not be used for sensitive health information. ConnectNow must have secure Firebase database rules before use.
+
+The four new projects include starter APIs, Prisma data models and React dashboards. Configure PostgreSQL and run migrations locally. HelpDesk Pro broadcasts realtime events, while its dashboard remains a starter interface. SkillSphere includes JWT registration/login and course/enrollment endpoints, but instructor provisioning and lesson completion UX remain to be built. UptimeX includes manual checks; a durable production scheduler and comprehensive SSRF defenses are not included. StockPilot's dashboard is a starter CRUD view; purchase/sale movement endpoints are API-first.
 
 Run each project's documented checks locally before relying on it. No claim is made that every app has been built or runtime-tested in this repository environment.

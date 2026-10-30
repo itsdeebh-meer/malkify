@@ -1,0 +1,1 @@
+export function movement(stock,qty,type){if(!Number.isInteger(stock)||stock<0||!Number.isInteger(qty)||qty<=0)throw Error('Invalid quantity');if(type==='sale'&&qty>stock)throw Error('Insufficient stock');if(!['sale','receive'].includes(type))throw Error('Invalid movement');return type==='sale'?stock-qty:stock+qty}export const isLowStock=(qty,reorder)=>qty<=reorder;

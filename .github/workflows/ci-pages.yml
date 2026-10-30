@@ -102,7 +102,7 @@ jobs:
 
   deploy-pages:
     name: Publish static portfolio and web demos
-    needs: [python-checks, flutter-checks, static-checks]
+    needs: [python-checks, python-tests, flutter-checks, static-checks]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment:
       name: github-pages

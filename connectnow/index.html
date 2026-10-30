@@ -2,4 +2,5 @@
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';import{getDatabase,ref,push,onChildAdded,query,limitToLast}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';import{getAuth,signInAnonymously}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 const cfg={apiKey:'YOUR_API_KEY',authDomain:'YOUR_PROJECT.firebaseapp.com',databaseURL:'https://YOUR_PROJECT-default-rtdb.firebaseio.com',projectId:'YOUR_PROJECT',appId:'YOUR_APP_ID'};let db,uid,sub;
 if(!Object.values(cfg).some(x=>x.startsWith('YOUR_'))){try{const app=initializeApp(cfg),a=getAuth(app);db=getDatabase(app);uid=(await signInAnonymously(a)).user.uid;state.textContent='Connected';}catch(e){state.textContent='Firebase error: '+e.message;}}else state.textContent='Paste your Firebase web config to connect.';
-function roomKey(){return room.value.trim().replace(/[^\\w-]/g,'').slice(0,40)||'lobby';}\nfunction connect(){if(!db)return;if(sub)sub();messages.innerHTML='';const r=query(ref(db,'rooms/'+roomKey()),limitToLast(100));>
+function roomKey(){return room.value.trim().replace(/[^\w-]/g,'').slice(0,40)||'lobby';}
+function connect(){if(!db)return;if(sub)sub();messages.innerHTML='';const r=query(ref(db,'rooms/'+roomKey()),limitToLast(100));>

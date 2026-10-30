@@ -67,6 +67,32 @@ jobs:
         working-directory: ${{ matrix.app }}
         run: flutter analyze --no-pub
 
+  static-app-smoke:
+    name: Static app smoke check
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [weather-app, shopverse, devportfolio, jobfinder, learnhub, connectnow]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify app entry point and parse HTML
+        env:
+          APP: ${{ matrix.app }}
+        run: |
+          python - <<'PY'
+          import os
+          from html.parser import HTMLParser
+          from pathlib import Path
+          app = Path(os.environ['APP'])
+          entry = app / 'index.html'
+          assert entry.is_file(), f'Missing {entry}'
+          class Checker(HTMLParser):
+              pass
+          Checker().feed(entry.read_text(encoding='utf-8'))
+          print(f'{app}: entry point parsed successfully')
+          PY
+
   node-checks:
     name: Node app build and API validation
     runs-on: ubuntu-latest
@@ -143,7 +169,7 @@ jobs:
 
   deploy-pages:
     name: Publish static portfolio and web demos
-    needs: [python-checks, python-tests, flutter-checks, static-checks, node-checks]
+    needs: [python-checks, python-tests, flutter-checks, static-checks, static-app-smoke, node-checks]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment:
       name: github-pages

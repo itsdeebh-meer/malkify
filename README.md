@@ -20,6 +20,7 @@ A collection of practical projects built with web technologies, Flutter, Firebas
 | [LearnHub](./learnhub) | HTML, CSS, JavaScript | Beginner lessons, quizzes and local progress tracking. |
 | [DeniAI Studio](./deniai-studio) | Python, Flask, Gemini | Server-side Gemini prompt assistant; API key required. |
 | [MediBook](./medibook) | Python, Flask, SQLite | Local appointment-request demo; not a real healthcare service. |
+| [DevTrack](./devtrack) | React, Node.js, Express, PostgreSQL, Prisma | Full-stack project management workspace with JWT auth, projects, Kanban tasks and comments. |
 
 ## Getting started
 

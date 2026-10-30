@@ -1,3 +1,40 @@
-generator client { provider = "prisma-client-js" }
-datasource db { provider = "postgresql" url = env("DATABASE_URL") }
-model User { id String @id @default(cuid()) name String email String @unique passwordHash String role String @default("STUDENT") } model Course { id String @id @default(cuid()) title String description String instructorId String lessons Lesson[] } model Lesson { id String @id @default(cuid()) courseId String title String content String } model Enrollment { id String @id @default(cuid()) userId String courseId String @@unique([userId,courseId]) }
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model User {
+  id           String       @id @default(cuid())
+  name         String
+  email        String       @unique
+  passwordHash String
+  role         String       @default("STUDENT")
+  courses      Course[]
+  enrollments  Enrollment[]
+}
+model Course {
+  id           String       @id @default(cuid())
+  title        String
+  description  String
+  instructorId String
+  instructor   User         @relation(fields: [instructorId], references: [id])
+  lessons      Lesson[]
+  enrollments  Enrollment[]
+}
+model Lesson {
+  id       String @id @default(cuid())
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title    String
+  content  String
+}
+model Enrollment {
+  id        String @id @default(cuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  @@unique([userId, courseId])
+}

@@ -100,6 +100,26 @@ jobs:
             echo "Node.js unavailable; skipping JavaScript syntax check"
           fi
 
+  python-tests:
+    name: Flask behavior tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test and app dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+          for app in smartcv linkify deniai-studio medibook; do
+            if [ -f "$app/requirements.txt" ]; then pip install -r "$app/requirements.txt"; fi
+          done
+      - name: Run Flask tests
+        env:
+          GEMINI_API_KEY: ''
+        run: pytest -q tests/test_flask_apps.py
+
   deploy-pages:
     name: Publish static portfolio and web demos
     needs: [python-checks, python-tests, flutter-checks, static-checks]

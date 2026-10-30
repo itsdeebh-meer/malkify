@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: malkify-smartcv
+    runtime: python
+    plan: free
+    rootDir: smartcv
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    healthCheckPath: /
+  - type: web
+    name: malkify-linkify
+    runtime: python
+    plan: free
+    rootDir: linkify
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    healthCheckPath: /
+    envVars:
+      - key: LINKIFY_DB
+        value: /tmp/linkify.db
+  - type: web
+    name: malkify-deniai-studio
+    runtime: python
+    plan: free
+    rootDir: deniai-studio
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    healthCheckPath: /
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
+  - type: web
+    name: malkify-medibook
+    runtime: python
+    plan: free
+    rootDir: medibook
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    healthCheckPath: /
+    envVars:
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: MEDIBOOK_DB
+        value: /tmp/medibook.db

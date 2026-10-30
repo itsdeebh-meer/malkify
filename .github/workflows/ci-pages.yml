@@ -10,10 +10,6 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: pages
-  cancel-in-progress: true
-
 jobs:
   python-checks:
     name: Python syntax and app smoke checks
@@ -21,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        app: [smartcv, linkify, deniai-studio, medibook, ai-chatbot]
+        app: [smartcv, linkify, deniai-studio, medibook]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

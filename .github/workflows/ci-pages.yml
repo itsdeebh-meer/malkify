@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        app: [smartcv, linkify, deniai-studio, medibook]
+        app: [smartcv, linkify, deniai-studio, medibook, ai-chatbot]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -66,6 +66,31 @@ jobs:
       - name: Analyze
         working-directory: ${{ matrix.app }}
         run: flutter analyze --no-pub
+
+  node-checks:
+    name: Node app build and API validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build DevTrack frontend
+        working-directory: devtrack/client
+        run: |
+          npm install
+          npm run build
+      - name: Validate DevTrack API and Prisma schema
+        working-directory: devtrack/server
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/devtrack
+          JWT_SECRET: ci-only-secret-that-is-at-least-32-characters-long
+        run: |
+          npm install
+          node --check src/index.js
+          node --check prisma/seed.js
+          npx prisma validate
+          npx prisma generate
 
   static-checks:
     name: Static web checks
@@ -118,7 +143,7 @@ jobs:
 
   deploy-pages:
     name: Publish static portfolio and web demos
-    needs: [python-checks, python-tests, flutter-checks, static-checks]
+    needs: [python-checks, python-tests, flutter-checks, static-checks, node-checks]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment:
       name: github-pages

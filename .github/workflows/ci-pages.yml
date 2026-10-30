@@ -92,13 +92,13 @@ jobs:
               Checker().feed(file.read_text(encoding="utf-8"))
               print("HTML parsed:", file)
           PY
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: Validate JavaScript syntax
         run: |
-          if command -v node >/dev/null; then
-            find . -name '*.js' -not -path './.git/*' -print0 | xargs -0 -r -n1 node --check
-          else
-            echo "Node.js unavailable; skipping JavaScript syntax check"
-          fi
+          find . -name '*.js' -not -path './.git/*' -print0 | xargs -0 -r -n1 node --check
+          python tests/check_inline_js.py
 
   python-tests:
     name: Flask behavior tests

@@ -1,0 +1,91 @@
+name: Portfolio project CI
+
+on:
+  push:
+    paths:
+      - 'stockpilot/**'
+      - 'helpdesk-pro/**'
+      - 'skillsphere/**'
+      - 'uptimex/**'
+      - '.github/workflows/portfolio-projects.yml'
+  pull_request:
+    paths:
+      - 'stockpilot/**'
+      - 'helpdesk-pro/**'
+      - 'skillsphere/**'
+      - 'uptimex/**'
+      - '.github/workflows/portfolio-projects.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: Verify ${{ matrix.project }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project: stockpilot
+            database: stockpilot
+            port: 4001
+          - project: helpdesk-pro
+            database: helpdesk_pro
+            port: 4002
+          - project: skillsphere
+            database: skillsphere
+            port: 4003
+          - project: uptimex
+            database: uptimex
+            port: 4004
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ${{ matrix.database }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d ${{ matrix.database }}"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install and validate backend
+        working-directory: ${{ matrix.project }}/server
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/${{ matrix.database }}?schema=public
+          JWT_SECRET: ci-only-secret-that-is-long-enough-for-tests-123456
+        run: |
+          npm install
+          npx prisma validate
+          npx prisma generate
+          npx prisma db push
+          npm test
+      - name: Start API and smoke-test health
+        working-directory: ${{ matrix.project }}/server
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/${{ matrix.database }}?schema=public
+          JWT_SECRET: ci-only-secret-that-is-long-enough-for-tests-123456
+          PORT: ${{ matrix.port }}
+          CLIENT_ORIGIN: http://localhost:5173
+        run: |
+          npm start > /tmp/api.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail http://127.0.0.1:${{ matrix.port }}/api/health; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/api.log
+          exit 1
+      - name: Build frontend
+        working-directory: ${{ matrix.project }}/client
+        run: |
+          npm install
+          npm run build

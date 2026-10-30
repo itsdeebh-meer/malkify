@@ -1,0 +1,3 @@
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "postgresql" url = env("DATABASE_URL") }
+model Ticket { id String @id @default(cuid()) subject String email String description String status String @default("OPEN") priority String @default("NORMAL") createdAt DateTime @default(now()) messages Message[] } model Message { id String @id @default(cuid()) ticketId String body String author String createdAt DateTime @default(now()) }

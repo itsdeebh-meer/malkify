@@ -6,10 +6,10 @@ A full-stack project management workspace built with React, Node.js, Express, Pr
 - Account registration and login (bcrypt + JWT)
 - Project creation, listing and deletion
 - Kanban task board: To do, In progress, Review, Done
-- Task priorities, due dates and task assignment to project members
-- Task comments
+- Task priorities and optional due dates
+- Task comments API
 - Dashboard metrics and upcoming deadlines
-- Responsive React interface
+- Responsive React interface with a Kanban workflow
 
 ## Stack
 React + Vite · Node.js + Express · PostgreSQL · Prisma ORM

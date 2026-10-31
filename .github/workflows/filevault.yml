@@ -1,0 +1,21 @@
+name: FileVault CI
+on:
+  push:
+    paths: ['filevault/**']
+  pull_request:
+    paths: ['filevault/**']
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: filevault
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: filevault/package.json
+      - run: npm install
+      - run: npm run build
